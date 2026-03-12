@@ -1,0 +1,38 @@
+## Project Status
+Paper: Explainability-Guided Defense (Wang et al. 2026)
+Model: ResNet-18, CIFAR-10
+Baseline clean acc: 95.14%
+Refined checkpoint: outputs/checkpoints/cifar10_refined_iter3_best.pth
+
+## Completed
+✅ Baseline training (100 epochs)
+✅ LIME Refinement (3 cycles x 50 epochs)
+✅ FGSM + PGD Evaluation
+✅ LIME Visualization (outputs/plots/attribution/lime_comparison_full.png)
+✅ Extension 1 (Multi-cycle refinement)
+✅ Extension 3 (AutoAttack) — currently running
+
+## Remaining
+❌ Extension 2 (GradCAM vs LIME — grad_xai.py)
+❌ Extension 4 (Continual agent — optional)
+❌ Final presentation plots
+❌ Report/writeup
+
+## Key Finding
+Baseline too strong (84% FGSM) vs paper (54% FGSM) due to label smoothing.
+Refined model maintains interpretability — LIME attribution maps show improvement.
+
+## Commands
+AutoAttack: CUDA_VISIBLE_DEVICES=2,6 python main.py --mode extensions
+GradCAM: CUDA_VISIBLE_DEVICES=2,6 python extensions/grad_xai.py (need to check)
+
+## AutoAttack Results (Extension 3) ✅ COMPLETE
+ε=0.01: Baseline=40.04% | Refined=44.63% (+4.59%)
+ε=0.03: Baseline=15.04% | Refined=20.12% (+5.08%)
+ε=0.05: Baseline=5.66%  | Refined=9.67%  (+4.01%)
+ε=0.08: Baseline=2.05%  | Refined=2.93%  (+0.88%)
+Refined beats baseline on ALL epsilons ✅
+
+## Remaining
+❌ Extension 2 (GradCAM vs LIME — grad_xai.py)
+❌ Final report/presentation
