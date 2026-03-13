@@ -70,7 +70,7 @@ def compute_global_spurious_mask(model, loader, cfg, device, n_samples=50):
         return torch.zeros(32, 32)
 
     mean_mask = np.mean(np.stack(masks, axis=0), axis=0)
-    binary_mask = (mean_mask > 0.5).astype(np.float32)
+    binary_mask = (mean_mask > 0.3).astype(np.float32)
     return torch.from_numpy(binary_mask)
 
 

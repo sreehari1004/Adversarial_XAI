@@ -1,5 +1,5 @@
 {
   "dataset": "cifar10",
   "stage": "baseline",
-  "clean_acc": 95.1
+  "clean_acc": 68.18
 }

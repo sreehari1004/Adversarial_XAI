@@ -75,7 +75,7 @@ def _train_epoch(model, loader, trainer: RefinementTrainer,
 def run_baseline_training(model, train_loader, test_loader,
                            cfg: dict, ckpt_dir: str, device: str,
                            dataset_name: str) -> nn.Module:
-    criterion    = nn.CrossEntropyLoss(label_smoothing=0.1)
+    criterion    = nn.CrossEntropyLoss(label_smoothing=float(cfg["training"].get("label_smoothing", 0.0)))
     base_lr      = float(cfg["training"]["lr"])
     total_epochs = cfg["training"]["epochs_baseline"]
     warmup       = cfg["training"]["warmup_epochs"]
@@ -84,9 +84,9 @@ def run_baseline_training(model, train_loader, test_loader,
         model.parameters(), lr=base_lr,
         momentum=float(cfg["training"]["momentum"]),
         weight_decay=float(cfg["training"]["weight_decay"]),
-        nesterov=True,
+        nesterov=cfg["training"].get("nesterov", False),
     )
-    scheduler = WarmupCosineScheduler(optimizer, warmup, total_epochs, base_lr)
+    scheduler = WarmupCosineScheduler(optimizer, warmup, total_epochs, base_lr) if cfg["training"].get("lr_scheduler", "none") != "none" else None
     scaler    = torch.cuda.amp.GradScaler()
     trainer   = RefinementTrainer(model, optimizer, criterion, cfg, device, scaler)
 
@@ -134,7 +134,7 @@ def run_refinement_training(model, train_loader, test_loader,
                              dataset_name: str,
                              spurious_mask=None,
                              iteration: int = 1) -> nn.Module:
-    criterion    = nn.CrossEntropyLoss(label_smoothing=0.1)
+    criterion    = nn.CrossEntropyLoss(label_smoothing=float(cfg["training"].get("label_smoothing", 0.0)))
     base_lr      = float(cfg["training"]["lr"]) * 0.1
     total_epochs = cfg["training"]["epochs_refinement"]
     warmup       = min(5, cfg["training"]["warmup_epochs"])
@@ -143,9 +143,9 @@ def run_refinement_training(model, train_loader, test_loader,
         model.parameters(), lr=base_lr,
         momentum=float(cfg["training"]["momentum"]),
         weight_decay=float(cfg["training"]["weight_decay"]),
-        nesterov=True,
+        nesterov=cfg["training"].get("nesterov", False),
     )
-    scheduler = WarmupCosineScheduler(optimizer, warmup, total_epochs, base_lr)
+    scheduler = WarmupCosineScheduler(optimizer, warmup, total_epochs, base_lr) if cfg["training"].get("lr_scheduler", "none") != "none" else None
     scaler    = torch.cuda.amp.GradScaler()
     trainer   = RefinementTrainer(model, optimizer, criterion, cfg, device, scaler)
 

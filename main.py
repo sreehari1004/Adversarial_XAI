@@ -117,9 +117,7 @@ def run_dataset(dataset_name: str, cfg: dict, device: str, args):
             dataset_name
         )
         save_checkpoint(model, _dummy_opt(model), 0,
-                        _final_ckpt(cfg, dataset_name, "refined_final"),
-    dataset_name
-)
+                        _final_ckpt(cfg, dataset_name, "refined_final"))
     # ── EVALUATION ────────────────────────────────────────────────────────
     if args.mode in ("evaluate", "full"):
         ext_b = (args.ckpt_baseline_c10  if dataset_name == "cifar10"
